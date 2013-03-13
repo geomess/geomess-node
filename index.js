@@ -1,43 +1,71 @@
+var GeoMessServer = function() {
+	this.log = require('./lib/log');
+	this.serverAuth = require('./lib/serverAuth');
+	this.clientAuth = require('./lib/clientAuth');
+	this.login = require('./lib/login');
+	this.routing = require('./lib/routing');
+	this.dbcalls = require('./lib/dbcalls');
+};
+
+GeoMessServer.prototype.setBayeux = function(val){
+	this.login.setBayeux(val);
+	this.routing.setBayeux(val);
+	this.dbcalls.setBayeux(val);
+};
+
+GeoMessServer.prototype.setDb = function(val) {
+	this.clientAuth.setDb(val);
+	this.login.setDb(val);
+	this.routing.setDb(val);
+	this.dbcalls.setDb(val);
+};
+
+GeoMessServer.prototype.setServerPassword = function(val){
+	this.serverAuth.setServerPassword(val);
+	this.routing.setServerPassword(val);
+};
+
+GeoMessServer.prototype.setDebugMeta = function(val){
+	this.log.setDebugMeta(val);
+};
+
+GeoMessServer.prototype.setDebugMessages = function(val){
+	this.log.setDebugMessages(val);
+};
+
 /* simple message log */
-var log = require('./lib/log');
-exports.logInterceptor = log.logInterceptor;
+GeoMessServer.prototype.getLogInterceptor = function(){
+	return this.log.logInterceptor;
+};
 
 /*server authentication*/
-var serverAuth = require('./lib/serverAuth');
-exports.restrictSubscriptionToServer = serverAuth.restrictSubscriptionToServer;
+GeoMessServer.prototype.getRestrictSubscriptionToServer = function(){
+	return this.serverAuth.restrictSubscriptionToServer;
+};
 
 /*client authentication*/
-var clientAuth = require('./lib/clientAuth');
-exports.authInterceptor = clientAuth.authInterceptor;
+GeoMessServer.prototype.getAuthInterceptor = function(){
+	return this.clientAuth.authInterceptor;
+};
 
 /*client login*/
-var login = require('./lib/login');
-exports.handleLogin = login.handleLogin;
+GeoMessServer.prototype.getLoginHandler = function(){
+	return this.login.handleLogin;
+};
 
 /*http router*/
-var routing = require('./lib/routing');
-exports.router = routing.router;
-
-exports.setBayeux = function(val){
-	login.setBayeux(val);
-	routing.setBayeux(val);
+GeoMessServer.prototype.getHTTPRouter = function(){
+	return this.routing.router;
 };
 
-exports.setDb = function(val) {
-	clientAuth.setDb(val);
-	login.setDb(val);
-	routing.setDb(val);
+/*db methods - agents by app*/
+GeoMessServer.prototype.getAgentsByApp = function(){
+	return this.dbcalls.getAgents;
 };
 
-exports.setServerPassword = function(val){
-	serverAuth.setServerPassword(val);
-	routing.setServerPassword(val);
+/*db methods - agent types*/
+GeoMessServer.prototype.getAgentTypes = function(){
+	return this.dbcalls.getAgentTypes;
 };
 
-exports.setDebugMeta = function(val){
-	log.setDebugMeta(val);
-};
-
-exports.setDebugMessages = function(val){
-	log.setDebugMessages(val);
-};
+module.exports.GeoMessServer = GeoMessServer;
