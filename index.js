@@ -2,27 +2,24 @@ var GeoMessServer = function() {
 	this.log = require('./lib/log');
 	this.serverAuth = require('./lib/serverAuth');
 	this.clientAuth = require('./lib/clientAuth');
-	this.login = require('./lib/login');
-	this.routing = require('./lib/routing');
-	this.dbcalls = require('./lib/dbcalls');
+	this.rest = require('./lib/rest');
+	this.faye = require('./lib/faye');
 };
 
 GeoMessServer.prototype.setBayeux = function(val){
-	this.login.setBayeux(val);
-	this.routing.setBayeux(val);
-	this.dbcalls.setBayeux(val);
+	this.rest.setBayeux(val);
+	this.faye.setBayeux(val);
 };
 
 GeoMessServer.prototype.setDb = function(val) {
 	this.clientAuth.setDb(val);
-	this.login.setDb(val);
-	this.routing.setDb(val);
-	this.dbcalls.setDb(val);
+	this.rest.setDb(val);
+	this.faye.setDb(val);
 };
 
 GeoMessServer.prototype.setServerPassword = function(val){
 	this.serverAuth.setServerPassword(val);
-	this.routing.setServerPassword(val);
+	this.rest.setServerPassword(val);
 };
 
 GeoMessServer.prototype.setDebugMeta = function(val){
@@ -48,24 +45,24 @@ GeoMessServer.prototype.getAuthInterceptor = function(){
 	return this.clientAuth.authInterceptor;
 };
 
-/*client login*/
-GeoMessServer.prototype.getLoginHandler = function(){
-	return this.login.handleLogin;
-};
-
-/*http router*/
+/*http - rest services*/
 GeoMessServer.prototype.getHTTPRouter = function(){
-	return this.routing.router;
+	return this.rest.router;
 };
 
-/*db methods - agents by app*/
+/*faye - client login*/
+GeoMessServer.prototype.getLoginHandler = function(){
+	return this.faye.handleLogin;
+};
+
+/*faye - agents by app*/
 GeoMessServer.prototype.getAgentsByApp = function(){
-	return this.dbcalls.getAgents;
+	return this.faye.getAgents;
 };
 
-/*db methods - agent types*/
+/*faye - agent types*/
 GeoMessServer.prototype.getAgentTypes = function(){
-	return this.dbcalls.getAgentTypes;
+	return this.faye.getAgentTypes;
 };
 
 module.exports.GeoMessServer = GeoMessServer;
